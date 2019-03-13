@@ -1,11 +1,11 @@
-#include "opencv2/imgproc.hpp"
-#include "opencv2/highgui.hpp"
+#include <opencv2/imgproc.hpp>
+#include <opencv2/highgui.hpp>
 #include <iostream>
 
 const int max_value_H = 360 / 2;
 const int max_value = 255;
-const cv::String window_capture_name = "Video Capture";
-const cv::String window_detection_name = "Object Detection";
+const cv::String window_capture_name = "Video";
+const cv::String window_detection_name = "Object";
 int low_H = 0, low_S = 0, low_V = 0;
 int high_H = max_value_H, high_S = max_value, high_V = max_value;
 
@@ -43,7 +43,7 @@ static void on_high_V_thresh_trackbar(int, void *)
 int main(int argc, char *argv[])
 {
   cv::VideoCapture cap(argc > 1 ? atoi(argv[1]) : 0);
-  
+
   cv::namedWindow(window_capture_name, cv::WINDOW_NORMAL);
   cv::namedWindow(window_detection_name, cv::WINDOW_NORMAL);
 
