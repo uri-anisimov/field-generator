@@ -11,65 +11,63 @@ int high_H = max_value_H, high_S = max_value, high_V = max_value;
 
 static void on_low_H_thresh_trackbar(int, void *)
 {
-  low_H = std::min(high_H - 1, low_H);
-  cv::setTrackbarPos("Low H", window_detection_name, low_H);
+    low_H = std::min(high_H - 1, low_H);
+    cv::setTrackbarPos("Low H", window_detection_name, low_H);
 }
 static void on_high_H_thresh_trackbar(int, void *)
 {
-  high_H = std::max(high_H, low_H + 1);
-  cv::setTrackbarPos("High H", window_detection_name, high_H);
+    high_H = std::max(high_H, low_H + 1);
+    cv::setTrackbarPos("High H", window_detection_name, high_H);
 }
 static void on_low_S_thresh_trackbar(int, void *)
 {
-  low_S = std::min(high_S - 1, low_S);
-  cv::setTrackbarPos("Low S", window_detection_name, low_S);
+    low_S = std::min(high_S - 1, low_S);
+    cv::setTrackbarPos("Low S", window_detection_name, low_S);
 }
 static void on_high_S_thresh_trackbar(int, void *)
 {
-  high_S = std::max(high_S, low_S + 1);
-  cv::setTrackbarPos("High S", window_detection_name, high_S);
+    high_S = std::max(high_S, low_S + 1);
+    cv::setTrackbarPos("High S", window_detection_name, high_S);
 }
 static void on_low_V_thresh_trackbar(int, void *)
 {
-  low_V = std::min(high_V - 1, low_V);
-  cv::setTrackbarPos("Low V", window_detection_name, low_V);
+    low_V = std::min(high_V - 1, low_V);
+    cv::setTrackbarPos("Low V", window_detection_name, low_V);
 }
 static void on_high_V_thresh_trackbar(int, void *)
 {
-  high_V = std::max(high_V, low_V + 1);
-  cv::setTrackbarPos("High V", window_detection_name, high_V);
+    high_V = std::max(high_V, low_V + 1);
+    cv::setTrackbarPos("High V", window_detection_name, high_V);
 }
 
 int main(int argc, char *argv[])
 {
-  cv::VideoCapture cap(argc > 1 ? atoi(argv[1]) : 0);
-
-  cv::namedWindow(window_capture_name, cv::WINDOW_NORMAL);
-  cv::namedWindow(window_detection_name, cv::WINDOW_NORMAL);
-
-  cv::createTrackbar("Low H", window_detection_name, &low_H, max_value_H, on_low_H_thresh_trackbar);
-  cv::createTrackbar("High H", window_detection_name, &high_H, max_value_H, on_high_H_thresh_trackbar);
-  cv::createTrackbar("Low S", window_detection_name, &low_S, max_value, on_low_S_thresh_trackbar);
-  cv::createTrackbar("High S", window_detection_name, &high_S, max_value, on_high_S_thresh_trackbar);
-  cv::createTrackbar("Low V", window_detection_name, &low_V, max_value, on_low_V_thresh_trackbar);
-  cv::createTrackbar("High V", window_detection_name, &high_V, max_value, on_high_V_thresh_trackbar);
-  cv::Mat frame, frame_HSV, frame_threshold;
-  //frame = cv::imread(argv[1], CV_LOAD_IMAGE_COLOR);
-  while (true)
-  {
-    cap >> frame;
-    if (frame.empty())
+    cv::VideoCapture cap(argc > 1 ? atoi(argv[1]) : 0);
+    cv::namedWindow(window_capture_name, cv::WINDOW_NORMAL);
+    cv::namedWindow(window_detection_name, cv::WINDOW_NORMAL);
+    cv::createTrackbar("Low H", window_detection_name, &low_H, max_value_H, on_low_H_thresh_trackbar);
+    cv::createTrackbar("High H", window_detection_name, &high_H, max_value_H, on_high_H_thresh_trackbar);
+    cv::createTrackbar("Low S", window_detection_name, &low_S, max_value, on_low_S_thresh_trackbar);
+    cv::createTrackbar("High S", window_detection_name, &high_S, max_value, on_high_S_thresh_trackbar);
+    cv::createTrackbar("Low V", window_detection_name, &low_V, max_value, on_low_V_thresh_trackbar);
+    cv::createTrackbar("High V", window_detection_name, &high_V, max_value, on_high_V_thresh_trackbar);
+    cv::Mat frame, frame_HSV, frame_threshold;
+    //frame = cv::imread(argv[1], CV_LOAD_IMAGE_COLOR);
+    while (true)
     {
-      break;
+        cap >> frame;
+        if (frame.empty())
+        {
+            break;
+        }
+        cv::cvtColor(frame, frame_HSV, cv::COLOR_BGR2HSV);
+        cv::inRange(frame_HSV, cv::Scalar(low_H, low_S, low_V), cv::Scalar(high_H, high_S, high_V), frame_threshold);
+        cv::imshow(window_capture_name, frame);
+        cv::imshow(window_detection_name, frame_threshold);
+        if (cv::waitKey(30) == 'q')
+        {
+            break;
+        }
     }
-    cv::cvtColor(frame, frame_HSV, cv::COLOR_BGR2HSV);
-    cv::inRange(frame_HSV, cv::Scalar(low_H, low_S, low_V), cv::Scalar(high_H, high_S, high_V), frame_threshold);
-    cv::imshow(window_capture_name, frame);
-    cv::imshow(window_detection_name, frame_threshold);
-    if (cv::waitKey(30) == 'q')
-    {
-      break;
-    }
-  }
-  return 0;
+    return 0;
 }
