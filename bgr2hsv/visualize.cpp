@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
     {
         auto start = std::chrono::system_clock::now();
         double ss = std::chrono::duration<double>(start.time_since_epoch()).count();
-        double a = ss / M_PI * 0.4;
+        double a = ss / M_PI * 1.8;
         double sin_a = sin(a);
         double cos_a = cos(a);
         cv::Size s = mat.size();
