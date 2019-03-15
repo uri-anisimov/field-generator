@@ -43,7 +43,6 @@ static void on_high_V_thresh_trackbar(int, void *)
 
 int main(int argc, char *argv[])
 {
-    cv::VideoCapture cap(argc > 1 ? atoi(argv[1]) : 0);
     cv::namedWindow(window_capture_name, cv::WINDOW_NORMAL);
     cv::namedWindow(window_detection_name, cv::WINDOW_NORMAL);
     cv::createTrackbar("Low H", window_detection_name, &low_H, max_value_H, on_low_H_thresh_trackbar);
@@ -52,11 +51,37 @@ int main(int argc, char *argv[])
     cv::createTrackbar("High S", window_detection_name, &high_S, max_value, on_high_S_thresh_trackbar);
     cv::createTrackbar("Low V", window_detection_name, &low_V, max_value, on_low_V_thresh_trackbar);
     cv::createTrackbar("High V", window_detection_name, &high_V, max_value, on_high_V_thresh_trackbar);
-    cv::Mat frame, frame_HSV, frame_threshold;
-    //frame = cv::imread(argv[1], CV_LOAD_IMAGE_COLOR);
+    cv::Mat input, frame, frame_HSV, frame_threshold;
+    cv::VideoCapture cap;
+    switch (argc)
+    {
+        case 1:
+            input = cv::Mat(480, 640, CV_8UC3, cv::Scalar(0));
+        break;
+        case 2:
+            if ((atoi(argv[1]) == 0) && (std::string(argv[1]) != "0"))
+            {
+                input = cv::imread(argv[1], CV_LOAD_IMAGE_COLOR);
+            }
+            else
+            {
+                cap.open(atoi(argv[1]));
+            }
+        break;
+        default:
+            return -1;
+    }
+    
     while (true)
     {
-        cap >> frame;
+        if (cap.isOpened())
+        {
+            cap >> frame;
+        }
+        else
+        {
+            frame = input.clone();
+        }
         if (frame.empty())
         {
             break;
@@ -69,16 +94,23 @@ int main(int argc, char *argv[])
             double sin_a = sin(a);
             double cos_a = cos(a);
             cv::Size s = frame.size();
+            
             cv::Point rp(s.width * (0.5 - 0.3 * sin_a), s.height * (0.5 - 0.3 * cos_a));
             cv::circle(frame, rp, 15, cv::Scalar(0, 0, 255), -1);
+            
             cv::Point gp(s.width * (0.5 - 0.2 * cos_a), s.height * (0.5 - 0.2 * sin_a));
             cv::circle(frame, gp, 25, cv::Scalar(0, 255, 0), -1);
+            
             cv::Point bp(s.width * (0.5 - 0.45 * cos_a), s.height * (0.5));
             cv::circle(frame, bp, 30, cv::Scalar(255, 0, 0), -1);
+            
             cv::Point wp(s.width * (0.5), s.height * (0.5 - 0.45 * sin_a));
             cv::circle(frame, wp, 30, cv::Scalar(255, 255, 255), -1);
+            
             auto end = std::chrono::system_clock::now();
             double ee = std::chrono::duration<double>(end.time_since_epoch()).count();
+            std::cout.precision(17);
+            std::cout << "[" << ee << "]\t[" << ss << "]\t[" << ee - ss << "]" << std::endl;
         }
 
         cv::cvtColor(frame, frame_HSV, cv::COLOR_BGR2HSV);
