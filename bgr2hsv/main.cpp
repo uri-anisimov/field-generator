@@ -1,6 +1,7 @@
 #include <opencv2/imgproc.hpp>
 #include <opencv2/highgui.hpp>
 #include <iostream>
+#include <chrono>
 
 const int max_value_H = 360 / 2;
 const int max_value = 255;
@@ -60,8 +61,29 @@ int main(int argc, char *argv[])
         {
             break;
         }
+
+        {
+            auto start = std::chrono::system_clock::now();
+            double ss = std::chrono::duration<double>(start.time_since_epoch()).count();
+            double a = ss / M_PI;
+            double sin_a = sin(a);
+            double cos_a = cos(a);
+            cv::Size s = frame.size();
+            cv::Point rp(s.width * (0.5 - 0.3 * sin_a), s.height * (0.5 - 0.3 * cos_a));
+            cv::circle(frame, rp, 15, cv::Scalar(0, 0, 255), -1);
+            cv::Point gp(s.width * (0.5 - 0.2 * cos_a), s.height * (0.5 - 0.2 * sin_a));
+            cv::circle(frame, gp, 25, cv::Scalar(0, 255, 0), -1);
+            cv::Point bp(s.width * (0.5 - 0.45 * cos_a), s.height * (0.5));
+            cv::circle(frame, bp, 30, cv::Scalar(255, 0, 0), -1);
+            cv::Point wp(s.width * (0.5), s.height * (0.5 - 0.45 * sin_a));
+            cv::circle(frame, wp, 30, cv::Scalar(255, 255, 255), -1);
+            auto end = std::chrono::system_clock::now();
+            double ee = std::chrono::duration<double>(end.time_since_epoch()).count();
+        }
+
         cv::cvtColor(frame, frame_HSV, cv::COLOR_BGR2HSV);
         cv::inRange(frame_HSV, cv::Scalar(low_H, low_S, low_V), cv::Scalar(high_H, high_S, high_V), frame_threshold);
+
         cv::imshow(window_capture_name, frame);
         cv::imshow(window_detection_name, frame_threshold);
         if (cv::waitKey(30) == 'q')
