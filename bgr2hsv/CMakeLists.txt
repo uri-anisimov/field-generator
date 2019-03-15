@@ -1,5 +1,5 @@
 add_executable(bgr2hsvTest test.cpp)
-target_link_libraries(bgr2hsvTest ${GTEST_LIBRARIES})
+target_link_libraries(bgr2hsvTest ${GTEST_LIBRARIES} pthread)
 
 add_executable(bgr2hsv main.cpp)
 target_link_libraries(bgr2hsv ${OpenCV_LIBS})

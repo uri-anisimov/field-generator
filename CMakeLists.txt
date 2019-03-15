@@ -1,6 +1,8 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.5)
 
 project(field-generator)
+
+set(CMAKE_CXX_STANDARD 11)
 
 find_package(GTest REQUIRED)
 include_directories(${GTEST_INCLUDE_DIR})
