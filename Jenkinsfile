@@ -33,8 +33,17 @@ pipeline
                 dir("${env.TEST_DIR}")
                 {
                     gTest("${env.INSTALL_DIR}/bin/bgr2hsvTest", "--gtest_output=xml:${env.TEST_DIR}/bgr2hsvTest.xml")
-                    xunit([JUnit(deleteOutputFiles: true, failIfNotNew: true, pattern: '*.xml', skipNoTestFiles: false, stopProcessingIfError: true)])
                 }
+            }
+        }
+    }
+    post
+    {
+        always
+        {
+            xunit
+            {
+xunit([GoogleTest(deleteOutputFiles: true, failIfNotNew: true, pattern: "${env.TEST_DIR}/*.xml", skipNoTestFiles: false, stopProcessingIfError: true)])
             }
         }
     }
