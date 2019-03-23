@@ -30,8 +30,8 @@ pipeline
             {
                 dir("${env.TEST_DIR}")
                 {
-                    gTest("${env.INSTALL_DIR}/bin/bgr2hsvTest", "--gtest_output=xml")
-                    xunit([xUnitDotNet(deleteOutputFiles: true, failIfNotNew: true, pattern: '**/*.xml', skipNoTestFiles: false, stopProcessingIfError: true)])
+                    gTest("${env.INSTALL_DIR}/bin/bgr2hsvTest", "--gtest_output=xml:${env.TEST_DIR}/bgr2hsvTest.xml")
+                    xunit([xUnitDotNet(deleteOutputFiles: true, failIfNotNew: true, pattern: '*.xml', skipNoTestFiles: false, stopProcessingIfError: true)])
                 }
             }
         }
@@ -43,6 +43,6 @@ def gTest(String tester, String args = "")
     def status = sh(script:"${tester} ${args}", returnStatus:true)
     if (status != 0)
     {
-        error("[${tester}] GTeest failed")
+        error("[${tester}] GTest failed")
     }
 }
