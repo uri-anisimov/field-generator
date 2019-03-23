@@ -26,7 +26,7 @@ pipeline
         {
             steps
             {
-                dir("${env.TMP_DIR}")
+                dir("${env.TEST_DIR}")
                 {
                     gTest("${env.INSTALL_DIR}/bin/bgr2hsvTest")
                 }
@@ -44,6 +44,7 @@ pipeline
 
 def visualize(int timeout)
 {
+    sh(script:"env")
     def status = sh(script:"timeout 30 ${env.INSTALL_DIR}/bin/visualize", returnStatus: true)
     if (status != 124)
     {
