@@ -34,7 +34,10 @@ pipeline
         }
         stage('Visualize')
         {
-            visuzlize(30)
+            steps
+            {
+                visuzlize(30)
+            }
         }
     }
 }
