@@ -20,6 +20,7 @@ pipeline
                 {
                     sh(script:"cmake -DCMAKE_BUILD_TYPE=${env.BUILD_TYPE} -DCMAKE_INSTALL_PREFIX=${env.INSTALL_DIR} ${env.WORKSPACE}")
                     sh(script:'make -j$(nproc)')
+                    remove("${env.INSTALL_DIR}")
                     sh(script:'make -j$(nproc) install')
                 }
             }
@@ -28,13 +29,26 @@ pipeline
         {
             steps
             {
+                remove("${env.TEST_DIR}")
                 dir("${env.TEST_DIR}")
                 {
-                    gTest("${env.INSTALL_DIR}/bin/bgr2hsvTest")
+                    gTest("${env.INSTALL_DIR}/bin/bgr2hsvTest", "--gtest_output=xml:${env.TEST_DIR}/bgr2hsvTest.xml")
                 }
             }
         }
     }
+    post
+    {
+        always
+        {
+            xunit([GoogleTest(deleteOutputFiles: true, failIfNotNew: true, pattern: "build/tmp/*.xml", skipNoTestFiles: false, stopProcessingIfError: true)])
+        }
+    }
+}
+
+def remove(String files)
+{
+    sh(script:"rm -rf ${files}")
 }
 
 def gTest(String tester, String args = "")
@@ -42,6 +56,6 @@ def gTest(String tester, String args = "")
     def status = sh(script:"${tester} ${args}", returnStatus:true)
     if (status != 0)
     {
-        error("[${tester}] GTeest failed")
+        error("[${tester}] GTest failed")
     }
 }
