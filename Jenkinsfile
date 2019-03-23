@@ -36,7 +36,7 @@ pipeline
         {
             steps
             {
-                visuzlize(30)
+                visualize(30)
             }
         }
     }
