@@ -34,23 +34,6 @@ pipeline
                 }
             }
         }
-        stage('Visualize')
-        {
-            steps
-            {
-                visualize(30)
-            }
-        }
-    }
-}
-
-def visualize(int timeout)
-{
-    sh(script:"env")
-    def status = sh(script:"timeout 30 ${env.INSTALL_DIR}/bin/visualize", returnStatus: true)
-    if (status != 124)
-    {
-        error("[visualise] with DISPLAY [${env.DISPLAY}] failed")
     }
 }
 
