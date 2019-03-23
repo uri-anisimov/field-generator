@@ -7,6 +7,8 @@ pipeline
         BUILD_TYPE = "Release"
         INSTALL_DIR = "${env.BUILD_DIR}/install"
         TEST_DIR = "${env.BUILD_DIR}/tmp"
+        DISPLAY = "$DISPLAY"
+        LD_LIBRARY_PATH = "$LD_LIBRARY_PATH"
     }
     stages 
     {
