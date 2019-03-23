@@ -30,7 +30,8 @@ pipeline
             {
                 dir("${env.TEST_DIR}")
                 {
-                    gTest("${env.INSTALL_DIR}/bin/bgr2hsvTest")
+                    gTest("${env.INSTALL_DIR}/bin/bgr2hsvTest", "--gtest_output=xml")
+                    xunit([xUnitDotNet(deleteOutputFiles: true, failIfNotNew: true, pattern: '**/*.xml', skipNoTestFiles: false, stopProcessingIfError: true)])
                 }
             }
         }
