@@ -41,10 +41,7 @@ pipeline
     {
         always
         {
-            xunit
-            {
-xunit([GoogleTest(deleteOutputFiles: true, failIfNotNew: true, pattern: "${env.TEST_DIR}/*.xml", skipNoTestFiles: false, stopProcessingIfError: true)])
-            }
+            xunit([GoogleTest(deleteOutputFiles: true, failIfNotNew: true, pattern: "${env.TEST_DIR}/*.xml", skipNoTestFiles: false, stopProcessingIfError: true)])
         }
     }
 }
