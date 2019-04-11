@@ -61,6 +61,11 @@ int main(int argc, char *argv[])
         case 2:
             if ((atoi(argv[1]) == 0) && (std::string(argv[1]) != "0"))
             {
+		cap.open(argv[1]);
+		if (cap.isOpened())
+		{
+			break;
+		}
                 input = cv::imread(argv[1], CV_LOAD_IMAGE_COLOR);
             }
             else
@@ -71,7 +76,7 @@ int main(int argc, char *argv[])
         default:
             return -1;
     }
-    
+
     while (true)
     {
         if (cap.isOpened())
